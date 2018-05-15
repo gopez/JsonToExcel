@@ -20,12 +20,8 @@ namespace JsonToExcel
             string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
             string dataPath    = Path.Combine(projectPath, filename);
             string outputFile  = "movies.xlsx";
-
             string json        = File.ReadAllText(dataPath);
-
-            //List<Movie> movies = JsonConvert.DeserializeObject<List<Movie>>(json);
-
-            ///Console.WriteLine(json);
+            
             Excel.Application xlApp = new Excel.Application();
 
             if (xlApp == null)
@@ -41,10 +37,10 @@ namespace JsonToExcel
             xlWorkBook  = xlApp.Workbooks.Add(misValue);
             xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
-            JArray items = JArray.Parse(json);
-
+            JArray items       = JArray.Parse(json);
             List<string> props = new List<string>();
 
+            // get all properties
             foreach (JObject item in items)
             {
                 foreach (JProperty prop in item.Properties())
@@ -60,8 +56,11 @@ namespace JsonToExcel
 
             // headers
             foreach (var p in props.Select((value, i) => new { i, value }))
+            {
                 xlWorkSheet.Cells[rowStart, p.i + 1] = p.value;
+            }
 
+            // data
             foreach (JObject item in items)
             {
                 foreach (var prop in props.Select((value, i) => new { i, value }))
