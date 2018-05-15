@@ -17,11 +17,11 @@ namespace JsonToExcel
         static void Main(string[] args)
         {
             string filename    = "movies.json"; // array of movie
+            string outputFile  = "movies.xlsx"; 
+
             string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
             string dataPath    = Path.Combine(projectPath, filename);
-            string outputFile  = "movies.xlsx";
-            string json        = File.ReadAllText(dataPath);
-            
+
             Excel.Application xlApp = new Excel.Application();
 
             if (xlApp == null)
@@ -37,6 +37,7 @@ namespace JsonToExcel
             xlWorkBook  = xlApp.Workbooks.Add(misValue);
             xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
+            string json        = File.ReadAllText(dataPath);
             JArray items       = JArray.Parse(json);
             List<string> props = new List<string>();
 
